@@ -15,3 +15,27 @@ async def fetch_with_retry(url: str, max_retries: int = 3, timeout: float = 30.0
                 raise
             await asyncio.sleep(2 ** attempt)
     raise RuntimeError("Unreachable")
+
+
+async def post(url: str, data: dict, timeout: float = 30.0) -> httpx.Response:
+    """POST JSON data to URL."""
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        resp = await client.post(url, json=data)
+        resp.raise_for_status()
+        return resp
+
+
+async def put(url: str, data: dict, timeout: float = 30.0) -> httpx.Response:
+    """PUT JSON data to URL."""
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        resp = await client.put(url, json=data)
+        resp.raise_for_status()
+        return resp
+
+
+async def delete(url: str, timeout: float = 30.0) -> httpx.Response:
+    """DELETE resource at URL."""
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        resp = await client.delete(url)
+        resp.raise_for_status()
+        return resp
